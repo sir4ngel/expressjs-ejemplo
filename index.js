@@ -1,23 +1,34 @@
+var express = require('express');
+var path = require('path');
+
+var app = module.exports = express();
+
 const PORT = 3000;
-// const http = require('http');
 
-// const server = http.createServer((req, res) => {
-//     res.status = 200;
-//     res.setHeader('Content-Type', 'text/plain');
-//     res.end('¡Hola mundo!');
-// });
+app.engine('.html', require('ejs').__express);
 
-// server.listen(PORT, () => {
-//     console.log('Servidor iniciado en el puerto: ' + PORT);
-// });
+app.set('views', path.join(__dirname, 'views'));
 
-const express = require('express');
-const app = express();
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req, res) => {
-    res.send('¡Hola mundo!');
+app.set('view engine', 'html');
+
+var users = [
+  { name: 'David', email: 'david@admin.com' },
+  { name: 'Carlos', email: 'carlos@admin.com' },
+  { name: 'Angel', email: 'angel@admin.com' }
+];
+
+app.get('/', function(req, res){
+  res.render('users', {
+    users: users,
+    title: "Ejemplo EXPRESSJS",
+    header: "Usuarios"
+  });
 });
 
-app.listen(PORT, () => {
-    console.log('Servidor iniciado en el puerto: ' + PORT);
-});
+/* istanbul ignore next */
+if (!module.parent) {
+  app.listen(PORT);
+  console.log('Servidor iniciado en el puerto: ' + PORT);
+}
